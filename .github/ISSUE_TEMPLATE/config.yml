@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/OneLiteFeatherNET/minestom-extensions/security/advisories/new
+    about: Please report security issues privately, not as public issues. See SECURITY.md.
+  - name: Questions / community chat
+    url: https://1lf.link/discord
+    about: Ask questions and discuss usage on our Discord instead of opening an issue.
+  - name: Upstream project (minestom-ce-extensions, archived)
+    url: https://github.com/hollow-cube/minestom-ce-extensions
+    about: This is an actively maintained fork. The original project is archived and no longer maintained.

@@ -1,0 +1,62 @@
+name: Bug report
+description: Report a problem with minestom-extensions
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report! Please fill out the fields below so we can
+        reproduce and fix the issue quickly.
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight checklist
+      options:
+        - label: I am using the latest released version.
+          required: true
+        - label: I searched existing issues and did not find a duplicate.
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, including what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps (and code, if possible) to reproduce the behavior.
+      placeholder: |
+        1. Initialize with `ExtensionBootstrap.init()`
+        2. ...
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output / stack trace
+      description: Paste any relevant logs. This will be automatically formatted, no backticks needed.
+      render: shell
+  - type: input
+    id: library-version
+    attributes:
+      label: minestom-extensions version
+      placeholder: e.g. 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: minestom-version
+    attributes:
+      label: Minestom version
+      placeholder: e.g. the version resolved via the mycelium-bom
+  - type: input
+    id: java-version
+    attributes:
+      label: Java version
+      placeholder: e.g. Temurin 25.0.3
+    validations:
+      required: true
