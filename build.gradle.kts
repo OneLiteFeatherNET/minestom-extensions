@@ -15,7 +15,9 @@ dependencies {
 
     testImplementation(platform(libs.myclium.bom))
     testImplementation(libs.minestom)
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.platform.launcher)
+    testRuntimeOnly(libs.junit.engine)
     testImplementation(libs.logback.classic)
 }
 
@@ -23,13 +25,15 @@ java {
     withSourcesJar()
     withJavadocJar()
 
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
 }
 
 tasks {
     test {
         useJUnitPlatform()
+        jvmArgs("-Dminestom.inside-test=true")
     }
 }
 

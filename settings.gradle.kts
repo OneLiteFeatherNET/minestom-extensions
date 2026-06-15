@@ -32,7 +32,11 @@ dependencyResolutionManagement {
             library("slf4j2", "org.slf4j", "slf4j-api").versionRef("slf4j2")
             library("minestom", "net.minestom", "minestom").withoutVersion()
             library("logback-classic", "ch.qos.logback", "logback-classic").versionRef("logback-classic")
-            library("junit-jupiter", "org.junit.jupiter", "junit-jupiter").withoutVersion()
+
+            library("junit.api", "org.junit.jupiter", "junit-jupiter-api").withoutVersion()
+            library("junit.engine", "org.junit.jupiter", "junit-jupiter-engine").withoutVersion()
+            library("junit.params", "org.junit.jupiter", "junit-jupiter-params").withoutVersion()
+            library("junit.platform.launcher", "org.junit.platform", "junit-platform-launcher").withoutVersion()
         }
 
     }
