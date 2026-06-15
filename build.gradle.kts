@@ -11,6 +11,7 @@ dependencies {
     implementation(platform(libs.myclium.bom))
     compileOnly(libs.minestom)
     implementation(libs.dependency.getter)
+    implementation(libs.slf4j2)
 
     testImplementation(platform(libs.myclium.bom))
     testImplementation(libs.minestom)
