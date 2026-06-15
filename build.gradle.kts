@@ -3,7 +3,6 @@ plugins {
     `maven-publish`
 }
 
-group = "net.onelitefeather.minestom"
 version = (version as String).substringBefore('#').trim()
 description = "Extensions for minestom, added externally as a library"
 
