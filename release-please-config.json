@@ -3,7 +3,7 @@
   "release-type": "simple",
   "include-component-in-tag": false,
   "include-v-in-tag": true,
-  "bootstrap-sha": "d21cd3245bdfa44c2edcd9abdd55fa9679e708d8",
+  "bootstrap-sha": "ee3b0a405c77932f831623acaa97f7e1f1e17ccb",
   "pull-request-header": "",
   "packages": {
     ".": {
