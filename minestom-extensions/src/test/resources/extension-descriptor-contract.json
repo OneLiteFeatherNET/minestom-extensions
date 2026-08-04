@@ -1,0 +1,29 @@
+{
+  "name": "ContractExtension",
+  "entrypoint": "com.example.ContractExtension",
+  "version": "4.2.0",
+  "authors": [
+    "TheMeinerLP",
+    "J\u00f6rg M\u00fcller"
+  ],
+  "dependencies": [
+    "FirstDependency",
+    "SecondDependency"
+  ],
+  "externalDependencies": {
+    "repositories": [
+      {
+        "name": "central",
+        "url": "https://repo1.maven.org/maven2/"
+      },
+      {
+        "name": "onelitefeather",
+        "url": "https://repo.onelitefeather.dev/releases"
+      }
+    ],
+    "artifacts": [
+      "com.google.guava:guava:33.4.0-jre",
+      "org.apache.commons:commons-lang3:3.17.0"
+    ]
+  }
+}

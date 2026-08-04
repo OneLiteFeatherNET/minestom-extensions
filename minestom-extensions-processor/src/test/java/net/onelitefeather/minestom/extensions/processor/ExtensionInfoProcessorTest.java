@@ -531,6 +531,50 @@ class ExtensionInfoProcessorTest {
     }
 
     @Test
+    @DisplayName("the generated descriptor matches the contract shared with minestom-extensions")
+    void generatedDescriptorMatchesSharedContract(@TempDir Path workDir) throws IOException {
+        // The @ExtensionInfo that produced extension-descriptor-contract.json. Keep the two in sync:
+        // minestom-extensions deserializes that same file into the real DiscoveredExtension, so this
+        // test is the half that proves the processor is what actually writes it.
+        final var result = CompilationHarness.javac(workDir)
+                .source("com.example.ContractExtension", """
+                        package com.example;
+                        %s
+                        @ExtensionInfo(
+                                name = "ContractExtension",
+                                version = "4.2.0",
+                                authors = {"TheMeinerLP", "J\\u00f6rg M\\u00fcller"},
+                                dependencies = {"FirstDependency", "SecondDependency"},
+                                repositories = {
+                                        @Repository(name = "central", url = "https://repo1.maven.org/maven2/"),
+                                        @Repository(name = "onelitefeather", url = "https://repo.onelitefeather.dev/releases")
+                                },
+                                externalDependencies = {
+                                        @ExternalDependency("com.google.guava:guava:33.4.0-jre"),
+                                        @ExternalDependency("org.apache.commons:commons-lang3:3.17.0")
+                                }
+                        )
+                        public class ContractExtension {
+                        }
+                        """.formatted(IMPORTS))
+                .compile();
+
+        assertTrue(result.success(), result::describe);
+
+        final String expected;
+        try (InputStream in = getClass()
+                .getResourceAsStream("/extension-descriptor-contract.json")) {
+            assertNotNull(in, "missing shared contract resource - is the descriptorContract "
+                    + "copy task wired into the test resources?");
+            expected = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
+
+        assertEquals(expected.strip(), result.extensionJson().strip(),
+                "the processor no longer reproduces the descriptor contract that "
+                        + "minestom-extensions asserts against");
+    }
+
+    @Test
     @DisplayName("the processor is registered through META-INF/services")
     void processorIsRegisteredAsAService() throws IOException {
         final ClassLoader loader = ExtensionInfoProcessor.class.getClassLoader();
