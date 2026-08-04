@@ -8,5 +8,6 @@ description = "Bill of Materials for the minestom-extensions modules"
 dependencies {
     constraints {
         api(project(":minestom-extensions"))
+        api(project(":minestom-extensions-processor"))
     }
 }
