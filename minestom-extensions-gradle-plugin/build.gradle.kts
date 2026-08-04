@@ -10,7 +10,6 @@ dependencies {
     // dependencies of its own, so the plugin adds nothing to a consumer's buildscript classpath.
     implementation(project(":minestom-extensions-processor"))
 
-    testImplementation(platform(libs.myclium.bom))
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.platform.launcher)
     testRuntimeOnly(libs.junit.engine)
