@@ -3,5 +3,50 @@
   "extends": [
     "github>OneLiteFeatherNET/renovate:default(OneLiteFeatherNET/minestom-extensions-maintainers)",
     "github>OneLiteFeatherNET/renovate:minestom"
+  ],
+  "customManagers": [
+    {
+      "description": "Maven coordinates shown as examples in the README, so the documented versions do not rot",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "datasourceTemplate": "maven",
+      "matchStrings": [
+        "(?<depName>[a-z][a-z0-9_-]*(?:\\.[a-z0-9_-]+)+:[a-zA-Z0-9_.-]+):(?<currentValue>\\d[a-zA-Z0-9_.-]*)"
+      ]
+    },
+    {
+      "description": "maven-compiler-plugin version in the README's Maven setup example",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "datasourceTemplate": "maven",
+      "depNameTemplate": "org.apache.maven.plugins:maven-compiler-plugin",
+      "matchStrings": [
+        "<artifactId>maven-compiler-plugin</artifactId>\\s*<version>(?<currentValue>[^<]+)</version>"
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "This project's own artifacts are versioned by release-please. The README shows them as placeholders today, but a future edit could paste a real version in.",
+      "matchFileNames": [
+        "README.md"
+      ],
+      "matchPackageNames": [
+        "net.onelitefeather:**"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "README examples are documentation - one grouped PR beats a stream of individual ones",
+      "matchFileNames": [
+        "README.md"
+      ],
+      "groupName": "README example versions",
+      "semanticCommitType": "docs"
+    }
   ]
 }
