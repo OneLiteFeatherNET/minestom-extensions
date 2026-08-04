@@ -13,7 +13,6 @@ dependencies {
     compileOnly(libs.maven.core)
     compileOnly(libs.maven.plugin.annotations)
 
-    testImplementation(platform(libs.myclium.bom))
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.platform.launcher)
     testRuntimeOnly(libs.junit.engine)

@@ -10,7 +10,6 @@ description = "Annotation processor generating extension.json for minestom exten
 dependencies {
     // Compile testing uses the JDK's own javax.tools.ToolProvider.getSystemJavaCompiler(),
     // so no external compile-testing library is required.
-    testImplementation(platform(libs.myclium.bom))
     testImplementation(libs.junit.api)
     testImplementation(libs.junit.platform.launcher)
     // Only used to parse the generated extension.json back, so the tests assert on the parsed

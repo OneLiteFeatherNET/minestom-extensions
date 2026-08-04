@@ -52,7 +52,7 @@ body:
     id: minestom-version
     attributes:
       label: Minestom version
-      placeholder: e.g. the version resolved via the mycelium-bom
+      placeholder: e.g. 2026.07.22-26.2
   - type: input
     id: java-version
     attributes:
