@@ -147,6 +147,51 @@ class MinestomExtensionPluginTest {
     }
 
     @Test
+    @DisplayName("the project version overrides the version from the annotation")
+    void projectVersionOverridesTheAnnotation(@TempDir Path dir) throws Exception {
+        writeProject(dir, """
+                version = "4.5.6"
+                """);
+
+        build(dir, "jar");
+
+        final String json = descriptorFromJar(dir);
+        assertTrue(json.contains("\"version\": \"4.5.6\""),
+                () -> "the project version was not written:\n" + json);
+    }
+
+    @Test
+    @DisplayName("useProjectVersion = false keeps the version from the annotation")
+    void annotationVersionIsKeptWhenOptedOut(@TempDir Path dir) throws Exception {
+        writeProject(dir, """
+                version = "4.5.6"
+                minestomExtension {
+                    useProjectVersion = false
+                }
+                """);
+
+        build(dir, "jar");
+
+        final String json = descriptorFromJar(dir);
+        assertTrue(json.contains("\"version\": \"1.0.0\""),
+                () -> "the annotation's version should have been left alone:\n" + json);
+    }
+
+    @Test
+    @DisplayName("an unset project version leaves the annotation's alone")
+    void unspecifiedProjectVersionIsIgnored(@TempDir Path dir) throws Exception {
+        // Gradle defaults an unset version to the string "unspecified" - writing that into a
+        // descriptor would be worse than doing nothing.
+        writeProject(dir, "");
+
+        build(dir, "jar");
+
+        final String json = descriptorFromJar(dir);
+        assertTrue(json.contains("\"version\": \"1.0.0\""),
+                () -> "\"unspecified\" leaked into the descriptor:\n" + json);
+    }
+
+    @Test
     @DisplayName("the jar carries exactly one extension.json")
     void jarHasASingleDescriptor(@TempDir Path dir) throws Exception {
         writeProject(dir, """
@@ -156,11 +201,21 @@ class MinestomExtensionPluginTest {
                 """);
         build(dir, "jar");
 
-        try (ZipFile zip = new ZipFile(dir.resolve("build/libs/sample.jar").toFile())) {
+        try (ZipFile zip = new ZipFile(jarIn(dir).toFile())) {
             final long count = zip.stream()
                     .filter(entry -> entry.getName().equals("extension.json"))
                     .count();
             assertEquals(1, count, "the processor's copy and the enriched one both got packaged");
+        }
+    }
+
+    private static Path jarIn(Path dir) throws IOException {
+        final Path libs = dir.resolve("build/libs");
+        assertTrue(Files.isDirectory(libs), () -> "no jar was built in " + libs);
+        try (var files = Files.list(libs)) {
+            return files.filter(p -> p.getFileName().toString().endsWith(".jar"))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("no jar in " + libs));
         }
     }
 
@@ -179,8 +234,8 @@ class MinestomExtensionPluginTest {
     }
 
     private static String descriptorFromJar(Path dir) throws IOException {
-        final Path jar = dir.resolve("build/libs/sample.jar");
-        assertTrue(Files.exists(jar), () -> "no jar was built at " + jar);
+        // Not a fixed name: a project with a version produces sample-<version>.jar.
+        final Path jar = jarIn(dir);
         try (ZipFile zip = new ZipFile(jar.toFile())) {
             final var entry = zip.getEntry("extension.json");
             assertNotNull(entry, "the jar has no extension.json");

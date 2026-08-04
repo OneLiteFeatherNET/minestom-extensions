@@ -6,8 +6,10 @@ import org.gradle.api.GradleException;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.MapProperty;
+import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.PathSensitive;
 import org.gradle.api.tasks.PathSensitivity;
@@ -62,6 +64,16 @@ public abstract class ExtensionDescriptorTask extends DefaultTask {
     public abstract MapProperty<String, String> getRepositories();
 
     /**
+     * Version to record, overriding whatever {@code @ExtensionInfo} declared. Left empty, the
+     * annotation's value stands.
+     *
+     * @return the property
+     */
+    @Input
+    @Optional
+    public abstract Property<String> getVersion();
+
+    /**
      * Where the enriched descriptor is written. The jar picks this up in place of the processor's
      * copy.
      *
@@ -86,6 +98,12 @@ public abstract class ExtensionDescriptorTask extends DefaultTask {
         } catch (IllegalArgumentException e) {
             throw new GradleException(file + " is not a usable extension descriptor: "
                     + e.getMessage(), e);
+        }
+
+        // The build is the better source for the version: keeping it in the annotation as well means
+        // maintaining it twice, and the copy in the source is the one that goes stale.
+        if (getVersion().isPresent()) {
+            descriptor.version(getVersion().get());
         }
 
         if (artifacts.isEmpty()) {

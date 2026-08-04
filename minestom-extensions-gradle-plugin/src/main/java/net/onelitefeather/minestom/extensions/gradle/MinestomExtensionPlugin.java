@@ -60,6 +60,7 @@ public class MinestomExtensionPlugin implements Plugin<Project> {
         final MinestomExtensionSpec spec =
                 project.getExtensions().create(SPEC_NAME, MinestomExtensionSpec.class);
         spec.getInheritProjectRepositories().convention(true);
+        spec.getUseProjectVersion().convention(true);
 
         final Configuration libraries = project.getConfigurations().create(CONFIGURATION_NAME, it -> {
             it.setDescription("Libraries the extension resolves at runtime, recorded in extension.json");
@@ -92,6 +93,7 @@ public class MinestomExtensionPlugin implements Plugin<Project> {
                     .toList()));
 
             task.getRepositories().set(project.provider(() -> repositoriesFor(project, spec)));
+            task.getVersion().set(project.provider(() -> versionFor(project, spec)));
         });
 
         // The processor writes the descriptor during compileJava, so the task has to run after it.
@@ -112,6 +114,21 @@ public class MinestomExtensionPlugin implements Plugin<Project> {
                 }
             });
         });
+    }
+
+    /**
+     * The version to record, or {@code null} to leave whatever the annotation declared.
+     *
+     * <p>Gradle defaults an unset project version to the string {@code "unspecified"}. Writing that
+     * into a descriptor would replace a perfectly good annotation value with a placeholder, so it is
+     * treated as "no version set".
+     */
+    private static String versionFor(Project project, MinestomExtensionSpec spec) {
+        if (!Boolean.TRUE.equals(spec.getUseProjectVersion().get())) {
+            return null;
+        }
+        final String version = String.valueOf(project.getVersion());
+        return version.isBlank() || "unspecified".equals(version) ? null : version;
     }
 
     private static java.io.File generatedDir(Project project) {

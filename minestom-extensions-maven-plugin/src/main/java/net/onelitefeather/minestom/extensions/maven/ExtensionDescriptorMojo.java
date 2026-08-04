@@ -87,6 +87,16 @@ public class ExtensionDescriptorMojo extends AbstractMojo {
     @Parameter(defaultValue = "true")
     private boolean inheritProjectRepositories;
 
+    /**
+     * Whether the project version is written into the descriptor, overriding
+     * {@code @ExtensionInfo(version = ...)}.
+     *
+     * <p>On by default: the POM already carries the version, and a copy kept in the annotation is
+     * the one that goes stale. Turn it off to keep the version in the source.
+     */
+    @Parameter(defaultValue = "true")
+    private boolean useProjectVersion;
+
     /** Skips the goal entirely. */
     @Parameter(property = "minestom.extension.skip", defaultValue = "false")
     private boolean skip;
@@ -100,7 +110,7 @@ public class ExtensionDescriptorMojo extends AbstractMojo {
 
         final File file = new File(outputDirectory, "extension.json");
         if (!file.isFile()) {
-            if (externalDependencies.isEmpty()) {
+            if (externalDependencies.isEmpty() && !useProjectVersion) {
                 getLog().debug("No descriptor and nothing configured, nothing to do");
                 return;
             }
@@ -119,6 +129,12 @@ public class ExtensionDescriptorMojo extends AbstractMojo {
         } catch (IllegalArgumentException e) {
             throw new MojoFailureException(file + " is not a usable extension descriptor: "
                     + e.getMessage(), e);
+        }
+
+        // The POM is the better source for the version: keeping it in the annotation as well means
+        // maintaining it twice, and the copy in the source is the one that goes stale.
+        if (useProjectVersion && project.getVersion() != null && !project.getVersion().isBlank()) {
+            descriptor.version(project.getVersion());
         }
 
         if (artifacts.isEmpty()) {

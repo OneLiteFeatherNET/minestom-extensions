@@ -272,8 +272,14 @@ verification enabled.
 ### The version comes from the build
 
 Note that the example above does not set `version()` on the annotation. The version usually already
-lives in the build, and duplicating it in the source is how the two get out of sync. Pass it as a
-compiler argument instead:
+lives in the build, and duplicating it in the source is how the two get out of sync.
+
+If you use one of the [build plugins](#declaring-dependencies-in-the-build), this is already handled:
+they write the project version into the descriptor, and there is nothing to configure. Set
+`useProjectVersion = false` (Gradle) or `<useProjectVersion>false</useProjectVersion>` (Maven) to
+keep the version in the annotation instead.
+
+Without a build plugin, pass it as a compiler argument:
 
 ```kotlin
 tasks.withType<JavaCompile> {
@@ -281,9 +287,12 @@ tasks.withType<JavaCompile> {
 }
 ```
 
-The compiler argument takes precedence over `version()`. If neither is set, the processor warns and
-omits the field, and the runtime reports the version as `Unspecified`. The name can be injected the
-same way with `-Aminestom.extension.name=<name>`.
+Either way the build wins over `version()`. If neither is set, the processor warns and omits the
+field, and the runtime reports the version as `Unspecified`. The name can be injected the same way
+with `-Aminestom.extension.name=<name>`.
+
+> The Gradle plugin ignores an unset project version. Gradle defaults it to the string
+> `unspecified`, and writing that into a descriptor would be worse than leaving the annotation alone.
 
 ### What the processor validates
 
@@ -314,7 +323,9 @@ version lives in the source as well as in the build, and the two drift apart. Th
 plugins let the build state it once.
 
 Both plugins run after the annotation processor and add to what it generated, so anything declared
-in `@ExtensionInfo` is kept. On a clash the annotation wins.
+in `@ExtensionInfo` is kept. On a clash the annotation wins — except for the version, where the build
+wins, since that is the value it already maintains. See [The version comes from the
+build](#the-version-comes-from-the-build).
 
 ### Gradle
 

@@ -68,6 +68,13 @@
           <description>Whether the repositories declared in the POM are recorded.</description>
         </parameter>
         <parameter>
+          <name>useProjectVersion</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Whether the project version overrides the annotation's.</description>
+        </parameter>
+        <parameter>
           <name>skip</name>
           <type>boolean</type>
           <required>false</required>
@@ -81,6 +88,7 @@
         <externalDependencies implementation="java.util.List"/>
         <repositories implementation="java.util.Map"/>
         <inheritProjectRepositories implementation="boolean" default-value="true"/>
+        <useProjectVersion implementation="boolean" default-value="true"/>
         <skip implementation="boolean" default-value="false">${minestom.extension.skip}</skip>
       </configuration>
     </mojo>

@@ -31,6 +31,20 @@ public abstract class MinestomExtensionSpec {
     public abstract Property<Boolean> getInheritProjectRepositories();
 
     /**
+     * Whether the project version is written into the descriptor, overriding
+     * {@code @ExtensionInfo(version = ...)}.
+     *
+     * <p>Defaults to {@code true}: the build already knows the version, and a copy kept in the
+     * annotation is the one that goes stale. Turn it off to keep the version in the source.
+     *
+     * <p>Has no effect while the project version is Gradle's {@code unspecified} placeholder —
+     * writing that into a descriptor would be worse than leaving the annotation alone.
+     *
+     * @return the property, defaulting to {@code true}
+     */
+    public abstract Property<Boolean> getUseProjectVersion();
+
+    /**
      * Additional repositories, keyed by name.
      *
      * @return the property

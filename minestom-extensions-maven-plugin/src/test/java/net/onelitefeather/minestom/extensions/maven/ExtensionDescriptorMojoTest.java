@@ -100,6 +100,36 @@ class ExtensionDescriptorMojoTest {
     }
 
     @Test
+    @DisplayName("the project version overrides the version from the annotation")
+    void projectVersionOverridesTheAnnotation(@TempDir Path dir) throws Exception {
+        final Path descriptor = writeProcessorOutput(dir).resolve("extension.json");
+        final ExtensionDescriptorMojo mojo = mojo(dir, List.of());
+        set(mojo, "useProjectVersion", true);
+
+        mojo.execute();
+
+        final String json = Files.readString(descriptor, StandardCharsets.UTF_8);
+        assertAll(
+                () -> assertTrue(json.contains("\"version\": \"9.9.9\""),
+                        () -> "the project version was not written:\n" + json),
+                () -> assertFalse(json.contains("1.0.0"),
+                        () -> "the annotation's version is still there:\n" + json));
+    }
+
+    @Test
+    @DisplayName("useProjectVersion=false keeps the version from the annotation")
+    void annotationVersionIsKeptWhenOptedOut(@TempDir Path dir) throws Exception {
+        final Path descriptor = writeProcessorOutput(dir).resolve("extension.json");
+        final ExtensionDescriptorMojo mojo = mojo(dir, List.of());
+        set(mojo, "useProjectVersion", false);
+
+        mojo.execute();
+
+        assertTrue(Files.readString(descriptor, StandardCharsets.UTF_8).contains("\"version\": \"1.0.0\""),
+                "the annotation's version should have been left alone");
+    }
+
+    @Test
     @DisplayName("a malformed coordinate fails")
     void malformedCoordinateFails(@TempDir Path dir) throws Exception {
         writeProcessorOutput(dir);
@@ -134,6 +164,7 @@ class ExtensionDescriptorMojoTest {
 
         final Model model = new Model();
         model.setBuild(build);
+        model.setVersion("9.9.9");
         final MavenProject project = new MavenProject(model);
         project.setArtifacts(Set.of(artifact("org.apache.commons", "commons-lang3", "3.17.0")));
         project.setRemoteArtifactRepositories(List.of(new MavenArtifactRepository(
