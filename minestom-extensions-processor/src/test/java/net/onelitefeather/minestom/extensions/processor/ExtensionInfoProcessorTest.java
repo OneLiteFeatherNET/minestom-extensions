@@ -569,9 +569,17 @@ class ExtensionInfoProcessorTest {
             expected = new String(in.readAllBytes(), StandardCharsets.UTF_8);
         }
 
-        assertEquals(expected.strip(), result.extensionJson().strip(),
+        // Line endings are normalised rather than compared. .gitattributes checks the contract out
+        // as LF everywhere, but a Windows working copy predating it — or an editor that rewrites the
+        // file on save — would otherwise fail this on CRLF alone. What the contract is about is the
+        // field names, their order, the indentation and the escaping.
+        assertEquals(normaliseLineEndings(expected), normaliseLineEndings(result.extensionJson()),
                 "the processor no longer reproduces the descriptor contract that "
                         + "minestom-extensions asserts against");
+    }
+
+    private static String normaliseLineEndings(String value) {
+        return value.replace("\r\n", "\n").strip();
     }
 
     @Test
