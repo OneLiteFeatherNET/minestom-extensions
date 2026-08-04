@@ -2,6 +2,7 @@ rootProject.name = "minestom-extensions"
 
 include("minestom-extensions")
 include("minestom-extensions-processor")
+include("minestom-extensions-gradle-plugin")
 include("minestom-extensions-bom")
 
 dependencyResolutionManagement {
