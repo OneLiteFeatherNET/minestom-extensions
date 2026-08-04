@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/OneLiteFeatherNET/minestom-extensions/compare/v2.1.0...v2.1.1) (2026-08-04)
+
+
+### Bug Fixes
+
+* drop mycelium-bom in favour of direct Minestom coordinates ([#5](https://github.com/OneLiteFeatherNET/minestom-extensions/issues/5)) ([1b391df](https://github.com/OneLiteFeatherNET/minestom-extensions/commit/1b391df8ba05cadba6dc0c3f9b6f2a9a7e73dd31))
+
 ## [2.1.0](https://github.com/OneLiteFeatherNET/minestom-extensions/compare/v2.0.0...v2.1.0) (2026-08-04)
 
 
