@@ -30,10 +30,17 @@ dependencyResolutionManagement {
             version("logback-classic", "1.4.5")
             version("slf4j2", "2.0.18")
             version("gson", "2.13.2")
-            version("dependency-getter", "v1.0.1")
+            // maven-resolver-provider carries the Maven-flavoured ArtifactDescriptorReader that
+            // understands POMs; the resolver modules must match the version it depends on, so keep
+            // these two in lockstep when bumping.
+            version("maven-resolver-provider", "3.9.12")
+            version("maven-resolver", "1.9.25")
 
             library("myclium-bom", "net.onelitefeather", "mycelium-bom").versionRef("mycelium-bom")
-            library("dependency-getter", "com.github.Minestom", "DependencyGetter").versionRef("dependency-getter")
+            library("maven-resolver-provider", "org.apache.maven", "maven-resolver-provider").versionRef("maven-resolver-provider")
+            library("maven-resolver-connector-basic", "org.apache.maven.resolver", "maven-resolver-connector-basic").versionRef("maven-resolver")
+            library("maven-resolver-transport-http", "org.apache.maven.resolver", "maven-resolver-transport-http").versionRef("maven-resolver")
+            library("maven-resolver-transport-file", "org.apache.maven.resolver", "maven-resolver-transport-file").versionRef("maven-resolver")
             library("slf4j2", "org.slf4j", "slf4j-api").versionRef("slf4j2")
             library("minestom", "net.minestom", "minestom").withoutVersion()
             library("logback-classic", "ch.qos.logback", "logback-classic").versionRef("logback-classic")
