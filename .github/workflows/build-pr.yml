@@ -3,8 +3,30 @@ on: [pull_request]
 
 jobs:
   build:
-    uses: OneLiteFeatherNET/workflows/.github/workflows/gradle-build-pr.yml@v2.1.0
+    uses: OneLiteFeatherNET/workflows/.github/workflows/gradle-build-pr.yml@v2.4.0
     with:
       java-version: "25.0.3"
       java-distribution: "temurin"
+      # The reusable workflow's default filter anchors sources at `src/**`, which stopped
+      # matching when they moved into `minestom-extensions/src/` and friends. Widened to
+      # `**/src/**`. `**/*.java` alone would not do: non-Java files under a module's src/ —
+      # notably minestom-extensions-processor's META-INF/services registration, which is what
+      # makes the annotation processor discoverable — would never trigger a build.
+      paths-filters: |
+        code:
+          - '**/*.gradle'
+          - '**/*.gradle.kts'
+          - '**/gradle.properties'
+          - 'gradle/**'
+          - 'gradlew'
+          - 'gradlew.bat'
+          - 'settings.gradle'
+          - 'settings.gradle.kts'
+          - 'buildSrc/**'
+          - '**/src/**'
+          - '**/*.java'
+          - '**/*.kt'
+          - '**/*.groovy'
+          - '**/*.scala'
+          - '.github/workflows/**'
     secrets: inherit

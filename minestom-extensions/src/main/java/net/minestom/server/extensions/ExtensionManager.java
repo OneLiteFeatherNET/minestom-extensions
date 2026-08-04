@@ -1,9 +1,6 @@
 package net.minestom.server.extensions;
 
 import com.google.gson.Gson;
-import net.minestom.dependencies.DependencyGetter;
-import net.minestom.dependencies.ResolvedDependency;
-import net.minestom.dependencies.maven.MavenRepository;
 import net.minestom.server.ServerProcess;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.ApiStatus;
@@ -548,28 +545,18 @@ public class ExtensionManager {
 
         for (DiscoveredExtension discoveredExtension : extensions) {
             try {
-                DependencyGetter getter = new DependencyGetter();
                 DiscoveredExtension.ExternalDependencies externalDependencies = discoveredExtension.getExternalDependencies();
-                List<MavenRepository> repoList = new LinkedList<>();
-                for (var repository : externalDependencies.repositories) {
+                var repoList = MavenDependencyResolver.toRemoteRepositories(externalDependencies.repositories);
 
-                    if (repository.name == null || repository.name.isEmpty()) {
-                        throw new IllegalStateException("Missing 'name' element in repository object.");
+                // Only pay for the resolver when the extension actually asks for external artifacts.
+                if (externalDependencies.artifacts.length > 0) {
+                    MavenDependencyResolver resolver = new MavenDependencyResolver(dependenciesFolder);
+                    for (String artifact : externalDependencies.artifacts) {
+                        for (URL resolved : resolver.resolve(artifact, repoList)) {
+                            addDependencyFile(resolved, discoveredExtension);
+                        }
+                        LOGGER.trace("Dependency of extension {}: {}", discoveredExtension.getName(), artifact);
                     }
-
-                    if (repository.url == null || repository.url.isEmpty()) {
-                        throw new IllegalStateException("Missing 'url' element in repository object.");
-                    }
-
-                    repoList.add(new MavenRepository(repository.name, repository.url));
-                }
-
-                getter.addMavenResolver(repoList);
-
-                for (String artifact : externalDependencies.artifacts) {
-                    var resolved = getter.get(artifact, dependenciesFolder);
-                    addDependencyFile(resolved, discoveredExtension);
-                    LOGGER.trace("Dependency of extension {}: {}", discoveredExtension.getName(), resolved);
                 }
 
                 ExtensionClassLoader extensionClassLoader = discoveredExtension.getClassLoader();
@@ -593,20 +580,10 @@ public class ExtensionManager {
         }
     }
 
-    private void addDependencyFile(@NotNull ResolvedDependency dependency, @NotNull DiscoveredExtension extension) {
-        URL location = dependency.getContentsLocation();
+    private void addDependencyFile(@NotNull URL location, @NotNull DiscoveredExtension extension) {
         extension.files.add(location);
         extension.getClassLoader().addURL(location);
         LOGGER.trace("Added dependency {} to extension {} classpath", location.toExternalForm(), extension.getName());
-
-        // recurse to add full dependency tree
-        if (!dependency.getSubdependencies().isEmpty()) {
-            LOGGER.trace("Dependency {} has subdependencies, adding...", location.toExternalForm());
-            for (ResolvedDependency sub : dependency.getSubdependencies()) {
-                addDependencyFile(sub, extension);
-            }
-            LOGGER.trace("Dependency {} has had its subdependencies added.", location.toExternalForm());
-        }
     }
 
     private boolean loadExtensionList(@NotNull List<DiscoveredExtension> extensionsToLoad) {

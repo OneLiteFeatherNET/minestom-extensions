@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Maintained by hand: see the comment in build.gradle.kts for why this is not generated.
+  PluginDescriptorTest verifies it against ExtensionDescriptorMojo, so adding or renaming a
+  @Parameter field without updating this file fails the build.
+-->
+<plugin>
+  <name>Minestom Extensions Maven Plugin</name>
+  <description>Adds the dependencies declared in the build to the generated extension.json</description>
+  <groupId>net.onelitefeather</groupId>
+  <artifactId>minestom-extensions-maven-plugin</artifactId>
+  <version>@pluginVersion@</version>
+  <goalPrefix>minestom-extension</goalPrefix>
+  <isolatedRealm>false</isolatedRealm>
+  <inheritedByDefault>true</inheritedByDefault>
+  <mojos>
+    <mojo>
+      <goal>describe</goal>
+      <description>Adds the dependencies declared in the POM to the generated extension.json</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <!-- provided-scope artifacts are only populated once dependencies are resolved -->
+      <requiresDependencyResolution>compile</requiresDependencyResolution>
+      <phase>process-classes</phase>
+      <implementation>net.onelitefeather.minestom.extensions.maven.ExtensionDescriptorMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <threadSafe>true</threadSafe>
+      <parameters>
+        <parameter>
+          <name>project</name>
+          <type>org.apache.maven.project.MavenProject</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>The project being built.</description>
+        </parameter>
+        <parameter>
+          <name>outputDirectory</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>Directory holding the compiled classes.</description>
+        </parameter>
+        <parameter>
+          <name>externalDependencies</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Coordinates to record. Defaults to the provided scope dependencies.</description>
+        </parameter>
+        <parameter>
+          <name>repositories</name>
+          <type>java.util.Map</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Repositories to record, as name=url entries.</description>
+        </parameter>
+        <parameter>
+          <name>inheritProjectRepositories</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Whether the repositories declared in the POM are recorded.</description>
+        </parameter>
+        <parameter>
+          <name>useProjectVersion</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Whether the project version overrides the annotation's.</description>
+        </parameter>
+        <parameter>
+          <name>skip</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Skips the goal entirely.</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <project implementation="org.apache.maven.project.MavenProject" default-value="${project}"/>
+        <outputDirectory implementation="java.io.File" default-value="${project.build.outputDirectory}"/>
+        <externalDependencies implementation="java.util.List"/>
+        <repositories implementation="java.util.Map"/>
+        <inheritProjectRepositories implementation="boolean" default-value="true"/>
+        <useProjectVersion implementation="boolean" default-value="true"/>
+        <skip implementation="boolean" default-value="false">${minestom.extension.skip}</skip>
+      </configuration>
+    </mojo>
+  </mojos>
+</plugin>

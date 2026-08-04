@@ -1,0 +1,18 @@
+# Normalise line endings in the repository and check everything out as LF, on every platform.
+# Without this, Git's autocrlf on Windows hands out CRLF working copies, and
+# extension-descriptor-contract.json — which is compared byte for byte against the annotation
+# processor's output, and that output is always LF — no longer matches.
+* text=auto eol=lf
+
+# Windows batch files only work with CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+gradlew.bat text eol=crlf
+
+# The wrapper script is executed by sh, so it must stay LF even on Windows checkouts.
+gradlew text eol=lf
+
+*.jar binary
+*.class binary
+*.png binary
+*.ico binary
