@@ -3,6 +3,7 @@ rootProject.name = "minestom-extensions"
 include("minestom-extensions")
 include("minestom-extensions-processor")
 include("minestom-extensions-gradle-plugin")
+include("minestom-extensions-maven-plugin")
 include("minestom-extensions-bom")
 
 dependencyResolutionManagement {
@@ -36,12 +37,17 @@ dependencyResolutionManagement {
             // these two in lockstep when bumping.
             version("maven-resolver-provider", "3.9.12")
             version("maven-resolver", "1.9.25")
+            version("maven-plugin-api", "3.9.16")
+            version("maven-plugin-annotations", "3.15.2")
 
             library("myclium-bom", "net.onelitefeather", "mycelium-bom").versionRef("mycelium-bom")
             library("maven-resolver-provider", "org.apache.maven", "maven-resolver-provider").versionRef("maven-resolver-provider")
             library("maven-resolver-connector-basic", "org.apache.maven.resolver", "maven-resolver-connector-basic").versionRef("maven-resolver")
             library("maven-resolver-transport-http", "org.apache.maven.resolver", "maven-resolver-transport-http").versionRef("maven-resolver")
             library("maven-resolver-transport-file", "org.apache.maven.resolver", "maven-resolver-transport-file").versionRef("maven-resolver")
+            library("maven-plugin-api", "org.apache.maven", "maven-plugin-api").versionRef("maven-plugin-api")
+            library("maven-core", "org.apache.maven", "maven-core").versionRef("maven-plugin-api")
+            library("maven-plugin-annotations", "org.apache.maven.plugin-tools", "maven-plugin-annotations").versionRef("maven-plugin-annotations")
             library("slf4j2", "org.slf4j", "slf4j-api").versionRef("slf4j2")
             library("minestom", "net.minestom", "minestom").withoutVersion()
             library("logback-classic", "ch.qos.logback", "logback-classic").versionRef("logback-classic")
