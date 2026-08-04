@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0](https://github.com/OneLiteFeatherNET/minestom-extensions/compare/v2.0.0...v2.1.0) (2026-08-04)
+
+
+### Features
+
+* split into modules, replace the dependency resolver, add build plugins ([30e9b1d](https://github.com/OneLiteFeatherNET/minestom-extensions/commit/30e9b1d03550194dabbd154a1d9e1bdb5eccd052))
+* split into modules, replace the dependency resolver, add build plugins ([#2](https://github.com/OneLiteFeatherNET/minestom-extensions/issues/2)) ([30e9b1d](https://github.com/OneLiteFeatherNET/minestom-extensions/commit/30e9b1d03550194dabbd154a1d9e1bdb5eccd052))
+
 ## [2.0.0](https://github.com/OneLiteFeatherNET/minestom-extensions/compare/v1.0.0...v2.0.0) (2026-06-15)
 
 
