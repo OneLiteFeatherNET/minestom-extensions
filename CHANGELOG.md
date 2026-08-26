@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/OneLiteFeatherNET/minestom-extensions/compare/v2.1.1...v2.2.0) (2026-08-26)
+
+
+### Features
+
+* allow passing an Auth to ExtensionBootstrap.init ([#7](https://github.com/OneLiteFeatherNET/minestom-extensions/issues/7)) ([b3a60a4](https://github.com/OneLiteFeatherNET/minestom-extensions/commit/b3a60a445e2059bac144c3dbf681d9fe5e008d9a))
+
 ## [2.1.1](https://github.com/OneLiteFeatherNET/minestom-extensions/compare/v2.1.0...v2.1.1) (2026-08-04)
 
 
